@@ -3,7 +3,8 @@
   :url nil
   :license {:name "MIT"
             :url "opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.4.0"]]
+  :dependencies [[org.clojure/clojure "1.4.0"],
+                 [org.clojure/math.numeric-tower "0.0.2"]]
   :profiles {:dev {:dependencies [[speclj "2.5.0"]]}}
   :plugins [[speclj "2.5.0"]]
   :test-paths ["spec"]
