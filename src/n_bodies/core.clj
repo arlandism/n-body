@@ -20,21 +20,18 @@
     (/ (* product-of-masses distance GRAVITY) positive-distance-cubed)))
 
 (defn force-on-one-body-from-another [body-one body-two]
-  (let [force-dimensions [[:force_x :x] [:force_y :y] [:force_z :z]]]
-    (loop [force-dimensions force-dimensions dictionary {}]
-      (if (empty? force-dimensions) 
-        dictionary 
-        (let [[force-direction axis] (first force-dimensions)]
+    (loop [dimension-axis-pairs [[:force_x :x] [:force_y :y] [:force_z :z]]
+           direction-value {}]
+      (if (empty? dimension-axis-pairs) 
+        direction-value 
+        (let [[dimension axis] (first dimension-axis-pairs) force-val (force-in-dimension-on-body axis body-one body-two)]
         (recur 
-          (rest force-dimensions) (assoc dictionary force-direction (force-in-dimension-on-body axis body-one body-two))))))))
+          (rest dimension-axis-pairs) (assoc direction-value dimension force-val))))))
 
    ; Is this better????
    ;{:force_x (force-in-dimension-on-body :x body-one body-two), 
    ; :force_y (force-in-dimension-on-body :y body-one body-two),
    ; :force_z (force-in-dimension-on-body :z body-one body-two)}))
-
-(defn force-on-one-body [index, bodies]
-  {:force_x 2.94E-10, :force_y -1.35E-10, :force_z 0})
 
 (defn force-calculator [bodies]
       [{
@@ -43,10 +40,3 @@
       {
        :force_x -2.94E-10, :force_y 1.35E-10, :force_z 0
       }])
-
-(defn vector-difference [first-vector second-vector]
-  {
-    :x (dimensional-difference :x first-vector second-vector)
-    :y (dimensional-difference :y first-vector second-vector)
-    :z (dimensional-difference :z first-vector second-vector)
-  })

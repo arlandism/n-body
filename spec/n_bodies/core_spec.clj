@@ -1,9 +1,9 @@
 (ns n-bodies.core-spec
   (:require [speclj.core :refer :all]
             [clojure.math.numeric-tower :refer [sqrt]]
-            [n-bodies.core :refer [force-calculator, vector-difference, 
+            [n-bodies.core :refer [force-calculator,  
                                    dimensional-difference, 
-                                   force-on-one-body, force-in-dimension-on-body,
+                                   force-in-dimension-on-body,
                                    GRAVITY, force-on-one-body-from-another]]))
 
 (describe "dimensional-difference"
@@ -16,21 +16,6 @@
     (let [first-vector {:x 20, :y 55, :z 0},
           second-vector {:x -20, :y 5, :z 0}]
       (should= 40, (dimensional-difference :x first-vector second-vector)))))
-
-(describe "vector-difference"
-  (it "calculates vector differences"
-    (let [first-vector {:x 20, :y 55, :z 0},
-          second-vector {:x -20, :y 5, :z 0}]
-     (should= {:x 40, :y 50, :z 0}, (vector-difference first-vector second-vector))))
-
-  (it "calculates vector differences with z"
-    (let [first-vector {:x 37, :y 67, :z 23},
-          second-vector {:x 49, :y 8, :z 0}]
-       (should= {:x -12, :y 59, :z 23}, (vector-difference first-vector second-vector))))
-  (it "calculates more vector differences"
-    (let [first-vector {:x 7, :y 6, :z 0},
-          second-vector {:x 49, :y 8, :z 0}]
-       (should= {:x -42, :y -2, :z 0}, (vector-difference first-vector second-vector)))))
 
 (describe "force-in-dimension-on-body"
   (context "x dimension"
