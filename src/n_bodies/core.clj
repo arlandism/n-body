@@ -24,7 +24,8 @@
            direction-value {}]
       (if (empty? dimension-axis-pairs) 
         direction-value 
-        (let [[dimension axis] (first dimension-axis-pairs) force-val (force-in-dimension-on-body axis body-one body-two)]
+        (let [[dimension axis] (first dimension-axis-pairs) 
+              force-val (force-in-dimension-on-body axis body-one body-two)]
         (recur 
           (rest dimension-axis-pairs) (assoc direction-value dimension force-val))))))
 
