@@ -85,13 +85,6 @@
     (let [vectors [
                 {:x 20, :y 55, :z 0},
                 {:x -20, :y 5, :z 0}]]
-      (should= 40, (directional-calculator :x vectors)))) 
-        
-  (it "calculates the difference between three vector directions"
-    (let [vectors [
-                {:x 20, :y 43, :z 0},
-                {:x 43, :y 433, :z 0},
-                {:x 930, :y 5, :z 0}]]
-      (should= 953, (directional-calculator :x vectors)))))
+      (should= 40, (directional-calculator :x vectors)))))
   
 (run-specs)
