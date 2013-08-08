@@ -2,30 +2,9 @@
   (:require [speclj.core :refer :all]
             [clojure.math.numeric-tower :refer [sqrt]]
             [n-bodies.core :refer [force-calculator, vector-difference, 
-                                   dimensional-difference, distance-formula, 
+                                   dimensional-difference, 
                                    force-on-one-body, force-in-dimension-on-body,
                                    GRAVITY, force-on-one-body-from-another]]))
-
-(describe "distance formula"
-  (it "calculates distance using Pythagorean theorem"
-    (let [points [
-                  {:x 2, :y 6},
-                  {:x 4, :y 12} 
-                 ]]
-      (should= (sqrt 40), (distance-formula points))))
-  
-  (it "calculates another distance using Pythagorean theorem"
-     (let [points [
-                  {:x 4, :y 9},
-                  {:x 9, :y 12} 
-                 ]]     
-      (should= (sqrt 34), (distance-formula points))))
-  (it "calculates 3-dimensional distance"
-    (let [points [
-                   {:x 2 :y 2 :z 2}
-                   {:x 0 :y 0 :z 0}
-                   ]]
-      (should= (sqrt 12) (distance-formula points)))))
 
 (describe "dimensional-difference"
   (it "calculates the difference between two vector directions"

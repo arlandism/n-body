@@ -13,12 +13,6 @@
 (defn square [x]
   (* x x))
 
-(defn distance-formula [points]
-  (let [difference (apply vector-difference points)
-        triangle (map square (vals difference))]
-    (sqrt 
-      (reduce + triangle))))
-
 (defn force-in-dimension-on-body [dimension target other-body]
   (let [distance (dimensional-difference dimension (target :position) (other-body :position))
         product-of-masses (* (target :mass) (other-body :mass))
@@ -34,6 +28,7 @@
         (recur 
           (rest force-dimensions) (assoc dictionary force-direction (force-in-dimension-on-body axis body-one body-two))))))))
 
+   ; Is this better????
    ;{:force_x (force-in-dimension-on-body :x body-one body-two), 
    ; :force_y (force-in-dimension-on-body :y body-one body-two),
    ; :force_z (force-in-dimension-on-body :z body-one body-two)}))
