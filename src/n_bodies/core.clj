@@ -1,8 +1,6 @@
 (ns n-bodies.core
   (:require [clojure.math.numeric-tower :refer [abs, expt]]))
 
-(declare vector-difference)
-
 (def GRAVITY 6.67384E-11)
 
 (defn dimensional-difference [direction first-coordinate second-coordinate]
@@ -33,24 +31,21 @@
 
 (defn sum-forces [force-one force-two]
   {
-   :force_x (+ force-one :x force-two :x) 
-   :force_y (+ force-one :y force-two :y) 
-   :force_z (+ force-one :z force-two :z) 
+   :force_x (reduce + (map :force_x [force-one  force-two])) 
+   :force_y (reduce + (map :force_y [force-one  force-two])) 
+   :force_z (reduce + (map :force_z [force-one force-two])) 
    })
 
 (defn sum-of-forces-on-one-body [body-one rest-of-bodies]
-  (force-on-one-body-from-another body-one (first rest-of-bodies)))
-  
-  ;{:force_x(+ 
-  ;    ((force-on-one-body-from-another body-one (first rest-of-bodies)) :x) 
-  ;    ((force-on-one-body-from-another body-one (second rest-of-bodies)) :x)
-  ; :force_y(+ 
-  ;    ((force-on-one-body-from-another body-one (first rest-of-bodies)) :y)  
-  ;    ((force-on-one-body-from-another body-one (second rest-of-bodies)) :y))
-  ; :force_z(+ 
-  ;    ((force-on-one-body-from-another body-one (first rest-of-bodies)) :z)  
-  ;    ((force-on-one-body-from-another body-one (second rest-of-bodies)) :z)))})
-
+    (loop [forces-so-far {:force_x 0 :force_y 0 :force_z 0} other-bodies rest-of-bodies]
+      (if (= 1 (count other-bodies))
+        (sum-forces forces-so-far (force-on-one-body-from-another body-one (first other-bodies)))  
+        (recur 
+          (sum-forces 
+            forces-so-far
+            (force-on-one-body-from-another body-one (first rest-of-bodies)))
+          (rest other-bodies)))))
+   
 (defn force-calculator [bodies]
  [(force-on-one-body-from-another (first bodies) (second bodies)) 
   (force-on-one-body-from-another (second bodies) (first bodies))])
