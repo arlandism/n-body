@@ -108,18 +108,18 @@
     (let [one-body {
                     :mass 5 ,
                     :velocity {:x 20, :y 55, :z 0}
-                    :position {:x 2, :y 4, :z 4}}
+                    :position {:x 2, :y 4, :z 4}} 
           second-body {
                     :mass 6,
                     :velocity {:x -20, :y 5, :z 0}
-                    :position {:x 7, :y 1, :z 0}}
+                    :position {:x 7, :y 1, :z 0}}  
           third-body {
                     :mass 2,
-                    :velocity {:x -20, :y 5, :z 0}
-                    :position {:x 2, :y 1, :z 0}}]
+                    :velocity {:x -20, :y 5, :z 0} 
+                    :position {:x 2, :y 2, :z 0}}] 
 
           (should= {:force_x (- (* GRAVITY (/ 6 5))), 
-                    :force_y (* GRAVITY (/ 40 9)),
+                    :force_y (* GRAVITY (/ 35 6)),
                     :force_z (* GRAVITY (/ 5 2)) 
                    },
                    (sum-of-forces-on-one-body one-body [second-body third-body])))))
