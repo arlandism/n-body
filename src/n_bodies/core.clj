@@ -4,9 +4,8 @@
 (def GRAVITY 6.67384E-11)
 
 (defn dimensional-difference [direction first-coordinate second-coordinate]
-  (- (get first-coordinate direction 0)
-     (get second-coordinate direction 0)))
-
+  (reduce - (map direction [first-coordinate second-coordinate])))
+  
 (defn force-in-dimension-on-body [dimension target other-body]
   (let [distance (dimensional-difference dimension (target :position) (other-body :position))
         product-of-masses (reduce * (map :mass [target other-body]))
@@ -15,10 +14,15 @@
       0
       (/ (* distance product-of-masses GRAVITY) distance-cubed))))
 
+(defn scale-vector [scale v]
+  {:x (* scale (v :x))
+   :y (* scale (v :y))
+   :z (* scale (v :z))})
+
 (defn force-template [x y z]
-  {:force_x x
-   :force_y y
-   :force_z z})
+  {:x x
+   :y y
+   :z z})
 
 (defn force-on-one-body-from-another [body-one body-two]
    (force-template
@@ -28,20 +32,17 @@
 
 (defn sum-forces [force-one force-two]
   (force-template
-    (reduce + (map :force_x [force-one  force-two])) 
-    (reduce + (map :force_y [force-one  force-two])) 
-    (reduce + (map :force_z [force-one force-two])) 
-  ))
+    (reduce + (map :x [force-one  force-two])) 
+    (reduce + (map :y [force-one  force-two])) 
+    (reduce + (map :z [force-one force-two]))))
 
 (defn sum-of-forces-on-one-body [body-one rest-of-bodies]
-    (loop [forces-so-far {:force_x 0 :force_y 0 :force_z 0} other-bodies rest-of-bodies]
-      (if (= 1 (count other-bodies))
-        (sum-forces forces-so-far (force-on-one-body-from-another body-one (first other-bodies)))  
-        (recur 
-          (sum-forces 
-            forces-so-far
-            (force-on-one-body-from-another body-one (first rest-of-bodies)))
-          (rest other-bodies)))))
+  (reduce (fn [forces-so-far current-body]
+            (sum-forces
+              forces-so-far
+              (force-on-one-body-from-another body-one current-body)))
+          {:x 0 :y 0 :z 0}
+          rest-of-bodies))
 
 (defn move-head-to-tail [coll]
   (drop 1 (conj coll (first coll))))
