@@ -27,7 +27,7 @@
   (let [distance (distance-formula (body-one :position) (body-two :position))]
     (if (zero? distance) 
       0
-      (/ 
+      (/
         (* GRAVITY (body-one :mass) (body-two :mass))
         (expt distance 3)))))
 
@@ -49,13 +49,14 @@
       (/ (* distance product-of-masses GRAVITY) distance-cubed))))
 
 (defn force-on-one-body-from-another [body-one body-two]
-  (scale-vector 
-    (calculate-constant body-one body-two) 
-    (vector-difference (body-one :position) (body-two :position))))
-   ;(force-template
-   ;  (force-in-dimension-on-body :x body-one body-two) 
-   ;  (force-in-dimension-on-body :y body-one body-two)
-   ;  (force-in-dimension-on-body :z body-one body-two)))
+  ;scale-vector 
+  ;  (calculate-constant body-one body-two) 
+  ;  (vector-difference (body-one :position) (body-two :position)))
+
+   (force-template
+     (force-in-dimension-on-body :x body-one body-two) 
+     (force-in-dimension-on-body :y body-one body-two)
+     (force-in-dimension-on-body :z body-one body-two)))
 
 (defn sum-forces [force-one force-two]
   (force-template
