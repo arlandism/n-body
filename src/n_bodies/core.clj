@@ -34,6 +34,12 @@
  (defn dimensional-difference [direction first-coordinate second-coordinate]
   (reduce - (map direction [first-coordinate second-coordinate])))
 
+(defn vector-difference [first-coordinate second-coordinate]
+  (force-template
+    (- (first-coordinate :x) (second-coordinate :x))
+    (- (first-coordinate :y) (second-coordinate :y))
+    (- (first-coordinate :z) (second-coordinate :z))))
+
 (defn force-in-dimension-on-body [dimension target-body other-body]
   (let [distance (dimensional-difference dimension (target-body :position) (other-body :position))
         product-of-masses (reduce * (map :mass [target-body other-body]))
@@ -43,7 +49,7 @@
       (/ (* distance product-of-masses GRAVITY) distance-cubed))))
 
 (defn force-on-one-body-from-another [body-one body-two]
-  (scale-vector (calculate-constant body-one body-two) (body-two :position)))
+  (scale-vector (calculate-constant body-one body-two) (vector-difference (body-one :position) (body-two :position))))
    ;(force-template
    ;  (force-in-dimension-on-body :x body-one body-two) 
    ;  (force-in-dimension-on-body :y body-one body-two)
