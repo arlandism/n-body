@@ -1,14 +1,30 @@
 (ns n-bodies.core-spec
   (:require [speclj.core :refer :all]
-            [clojure.math.numeric-tower :refer [sqrt, ceil]]
-            [n-bodies.core :refer [compute-forces,  
-                                   dimensional-difference, 
-                                   force-in-dimension-on-body,
-                                   GRAVITY, 
-                                   sum-of-forces-on-one-body,
-                                   force-on-one-body-from-another
-                                   scale-vector]]))
+            [clojure.math.numeric-tower :refer [ceil, sqrt, expt, abs ]]
+            [n-bodies.core :refer :all]))
 
+(describe "distance-formula"
+  (it "performs the distance formula for 3 dimensions"
+    (should= (sqrt 2) (distance-formula {:x 1 :y 2 :z 0} {:x 2 :y 3 :z 0}))
+    (should= (sqrt 13)(distance-formula {:x 1 :y 5 :z 4} {:x 1 :y 2 :z 6}))))
+
+(describe "calculate-constant"
+  (it "calculates the (product-of-masses * gravity/ (distance-form cubed)"    
+    (let [mass-one 1 mass-two 2
+          position-one {:x 2 :y 3 :z 1} position-two {:x 2 :y 3 :z 2} 
+          body-one {:mass mass-one :position position-one} body-two {:mass mass-two :position position-two}]
+
+      (should= (/ 
+                 (* mass-one mass-two GRAVITY) 
+                 (expt (abs (distance-formula position-one position-two)) 3)) 
+               (calculate-constant body-one body-two)))
+
+    (let [mass-one 3 mass-two 4
+          position-one {:x 0 :y 0 :z 0} position-two {:x 0 :y 0 :z 0} 
+          body-one {:mass mass-one :position position-one} body-two {:mass mass-two :position position-two}]
+
+      (should= 0 (calculate-constant body-one body-two)))))
+  
 (describe "dimensional-difference"
   (it "calculates the difference between two vector directions"
     (let [first-vector {:x 20, :y 55, :z 0},

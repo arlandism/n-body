@@ -1,18 +1,10 @@
 (ns n-bodies.core
-  (:require [clojure.math.numeric-tower :refer [abs, expt]]))
+  (:require [clojure.math.numeric-tower :refer [abs, expt, sqrt]]))
 
 (def GRAVITY 6.67384E-11)
 
-(defn dimensional-difference [direction first-coordinate second-coordinate]
-  (reduce - (map direction [first-coordinate second-coordinate])))
-  
-(defn force-in-dimension-on-body [dimension target other-body]
-  (let [distance (dimensional-difference dimension (target :position) (other-body :position))
-        product-of-masses (reduce * (map :mass [target other-body]))
-        distance-cubed (expt (abs distance) 3)]
-    (if (zero? distance-cubed)
-      0
-      (/ (* distance product-of-masses GRAVITY) distance-cubed))))
+(defn move-head-to-tail [coll]
+  (drop 1 (conj coll (first coll))))
 
 (defn scale-vector [scale v]
   {:x (* scale (v :x))
@@ -24,11 +16,38 @@
    :y y
    :z z})
 
+(defn distance-formula [pos-one pos-two]
+  (let [a-squared (expt (- (pos-one :x) (pos-two :x)) 2)
+        b-squared (expt (- (pos-one :y) (pos-two :y)) 2)
+        c-squared (expt (- (pos-one :z) (pos-two :z)) 2)]
+  (sqrt
+    (+ a-squared b-squared c-squared))))
+
+(defn calculate-constant [body-one body-two]
+  (let [distance (distance-formula (body-one :position) (body-two :position))]
+    (if (zero? distance) 
+      0
+      (/ 
+        (* GRAVITY (body-one :mass) (body-two :mass))
+        (expt (abs distance) 3)))))
+
+ (defn dimensional-difference [direction first-coordinate second-coordinate]
+  (reduce - (map direction [first-coordinate second-coordinate])))
+
+(defn force-in-dimension-on-body [dimension target-body other-body]
+  (let [distance (dimensional-difference dimension (target-body :position) (other-body :position))
+        product-of-masses (reduce * (map :mass [target-body other-body]))
+        distance-cubed (expt (abs distance) 3)]
+    (if (zero? distance-cubed)
+      0
+      (/ (* distance product-of-masses GRAVITY) distance-cubed))))
+
 (defn force-on-one-body-from-another [body-one body-two]
-   (force-template
-     (force-in-dimension-on-body :x body-one body-two) 
-     (force-in-dimension-on-body :y body-one body-two)
-     (force-in-dimension-on-body :z body-one body-two)))
+  (scale-vector (calculate-constant body-one body-two) (body-two :position)))
+   ;(force-template
+   ;  (force-in-dimension-on-body :x body-one body-two) 
+   ;  (force-in-dimension-on-body :y body-one body-two)
+   ;  (force-in-dimension-on-body :z body-one body-two)))
 
 (defn sum-forces [force-one force-two]
   (force-template
@@ -43,10 +62,7 @@
               (force-on-one-body-from-another body-one current-body)))
           {:x 0 :y 0 :z 0}
           rest-of-bodies))
-
-(defn move-head-to-tail [coll]
-  (drop 1 (conj coll (first coll))))
-   
+  
 (defn compute-forces [bodies]
   (loop [forces-thus-far []  bodies bodies]
    (if (= (count forces-thus-far) (count bodies)) 
