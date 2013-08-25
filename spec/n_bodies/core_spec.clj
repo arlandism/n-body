@@ -16,7 +16,7 @@
 
       (should= (/ 
                  (* mass-one mass-two GRAVITY) 
-                 (expt (abs (distance-formula position-one position-two)) 3)) 
+                 (expt (distance-formula position-one position-two) 3)) 
                (calculate-constant body-one body-two)))
 
     (let [mass-one 3 mass-two 4
