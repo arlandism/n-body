@@ -3,9 +3,11 @@
             [clojure.math.numeric-tower :refer [ceil, sqrt, expt]]
             [n-bodies.core :refer :all]))
 
-;(describe "scale vector"
-;  (it "doubles the vector"
-;      (should= {:x 2 :y 4 :z 2} (scale-vector 2 {:x 1 :y 2 :z 1}))))
+(describe "compute-f-on-dimensions"
+  (it "performs given functions for all dimensions"
+    (should= {:x 2 :y 1 :z 0} (compute-f-on-dimensions + {:x 0 :y 0 :z 0} {:x 2 :y 1 :z 0}))
+    (should= {:x -2 :y -1 :z 0} (compute-f-on-dimensions - {:x 0 :y 0 :z 0} {:x 2 :y 1 :z 0}))
+    (should= {:x 0 :y 0 :z 0} (compute-f-on-dimensions * {:x 0 :y 0 :z 0} {:x 2 :y 1 :z 0}))))
 
 (describe "distance-formula"
   (it "performs the distance formula for 3 dimensions"
